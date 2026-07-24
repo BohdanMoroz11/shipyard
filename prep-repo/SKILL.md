@@ -1,68 +1,57 @@
 ---
 name: prep-repo
-description: Audit whether a repository is ready for the shipyard plan/ship flow (docs structure, tests, lint, typecheck, CI, git/PR hygiene, codegen sync, local-run instructions) and remediate the gaps. Use when onboarding a new or existing project to this workflow, or when the user asks whether a repo is "ready for the flow". Invoke explicitly.
+description: Remediate gaps from an audit-repo readiness report so a repository can use the shipyard plan/ship flow. Implements an agreed report (or an explicit subset of gaps); does not re-audit from scratch unless the user asks. Use after audit-repo, or when the user hands you a known list of readiness gaps to fix. Invoke explicitly.
 disable-model-invocation: true
 ---
 
-# prep-repo — make a repo ready for the flow
+# prep-repo — remediate readiness gaps
 
-The other skills (`plan`, `ship`, `hotfix`) are **doc-driven**: they read a
-repo's docs to learn its conventions. This skill makes sure those docs — and
-the surrounding tooling — actually exist. First read `../_method/vocabulary.md`.
+Takes an **agreed readiness report** (from `audit-repo`, or a list of gaps the
+user already knows) and implements the fixes. It does not invent a fresh audit
+unless the user asks — start from the report.
+
+First read `../_method/vocabulary.md`. If there is no report yet, suggest
+`audit-repo` first.
 
 ## Workflow
 
 ```
-- [ ] 1. Audit against the readiness checklist
-- [ ] 2. Write a readiness report (present / partial / missing per item)
-- [ ] 3. Propose remediation; if large, create a temp plan doc
-- [ ] 4. Implement the fixes (hand off to `plan`/`ship` if it's a big stage)
+- [ ] 1. Load the agreed report (or the user's gap list)
+- [ ] 2. Confirm scope — which gaps to fix now
+- [ ] 3. Implement (or hand large work to plan/ship)
+- [ ] 4. Summarize what changed; note anything still open
 ```
 
-### 1. Readiness checklist
+### 1. Load the report
 
-Inspect the repo and grade each item **present / partial / missing**:
+Use the readiness report from `audit-repo` in this conversation, a report the
+user pastes/points at, or an explicit gap list they give you. If none of those
+exist, run `audit-repo` (or ask the user to) before changing anything.
 
-- **Agent entry doc** — `AGENTS.md`/`CLAUDE.md` that orients an agent and links
-  to canonical docs.
-- **Docs tree** — a `docs/` (or equivalent) with: a **plans hub** (README
-  describing the working model + a backlog), **domain docs**, and a
-  **decisions/ADR** dir.
-- **Plans dir + naming** — a place plan docs live and a naming convention.
-- **Lint + format** — configured, with a single command to run.
-- **Typecheck / build** — a command that fails on type errors.
-- **Tests** — a runner, a conventions doc, a command; ideally an expectation of
-  what must be covered.
-- **CI** — runs on PRs; gates lint + typecheck + test; queryable (e.g. `gh`
-  installed and authed).
-- **Git / PR hygiene** — can branch and open PRs; a commit-message convention;
-  optional PR template.
-- **Generated-artifact sync** — if codegen exists, a documented "regenerate +
-  commit together" gate.
-- **Local run instructions** — a README section on running locally (needed for
-  smoke checks).
+### 2. Confirm scope
 
-### 2. Readiness report
+Confirm which gaps to fix in this pass. Don't silently expand into "also tidy
+everything else." Facts only the repo owner can decide (money model, timezone,
+naming) stay as **open decisions** — propose, don't guess.
 
-Present a table (item / status / gap). Lead with a one-line verdict: **ready**,
-**ready with gaps**, or **not ready**.
+### 3. Implement
 
-### 3. Propose remediation
+Prefer minimal, convention-matching additions over rewrites.
 
-List the changes needed, ordered by what unblocks the flow first (docs
-structure usually comes before CI). If remediation is small, just do it. If it
-spans many files or decisions, create a **temporary remediation plan doc** in
-the project's plans dir (use `../_method/plan-template.md`) and drive it through
-`plan` / `ship`.
+- **Small remediation** — apply the fixes directly (scaffold doc structure,
+  wire commands, add missing stubs with clear TODOs).
+- **Large remediation** — if it spans many files or needs collaborative
+  decisions, create a stage plan (use `../_method/plan-template.md`) and drive
+  it through `plan` / `ship` instead of dumping a mega-diff here.
 
-### 4. Implement
+### 4. Summarize
 
-Apply the fixes. Prefer minimal, convention-matching additions over rewrites.
-Never invent project quirks — put facts the repo owner must decide (money model,
-timezone, naming) as **open questions**, don't guess them.
+Report what was fixed, what was deferred, and whether another `audit-repo`
+pass is worth it.
 
 ## Boundaries
 
 - Don't fabricate domain content. Scaffold doc *structure* and leave clearly
   marked TODOs for the owner to fill business rules.
 - This skill sets a repo up; it doesn't ship features. Once ready, use `plan`.
+- Don't start implementing without an agreed gap list — audit first.

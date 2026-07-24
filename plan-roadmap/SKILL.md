@@ -13,6 +13,7 @@ build.
 
 First read:
 - `../_method/vocabulary.md` — the phase/stage/task hierarchy
+- `../_method/phase-template.md` — the roadmap-doc shape
 
 ## When this vs `plan`
 
@@ -25,23 +26,29 @@ First read:
 ```
 - [ ] 1. Read the project's plans hub + conventions
 - [ ] 2. Clarify the goal and its rough boundary
-- [ ] 3. Surface cross-cutting risks / sequencing questions — wait
+- [ ] 3. Surface cross-cutting decisions (Q + proposed + risks) — wait
 - [ ] 4. Decompose into ordered stages (each ≈ one PR)
 - [ ] 5. Write the living roadmap doc; wire it into the plans index/backlog
 ```
 
-### Decompose into stages
+### 3. Cross-cutting decisions
+
+Only questions that shape **multiple stages** or the **sequencing** itself.
+Same decision shape as stage plans (proposed answer, risks, mitigation) — then
+stop and wait. Per-stage detail belongs in `plan` later.
+
+### 4. Decompose into stages
 
 Break the phase into an **ordered list of stages**, each small enough to be one
 PR / one session. For each stage: a one-line goal and its rough dependency on
 earlier stages. Don't over-specify commit slices here — that's the per-stage
 `plan`'s job.
 
-### The roadmap doc
+### 5. The roadmap doc
 
-Write a living doc in the project's plans dir. It must make **current state**
-legible at a glance — which stages are done / in progress / not started. Match
-the project's existing roadmap/phase style if one exists. Update it as stages
+Write a living doc in the project's plans dir using `phase-template.md` (or the
+project's existing roadmap style). It must make **current state** legible at a
+glance — which stages are done / in progress / not started. Update it as stages
 land; it's the tracking layer, so keep it honest.
 
 ## Boundaries

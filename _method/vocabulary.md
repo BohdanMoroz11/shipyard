@@ -26,10 +26,20 @@ stage level; the phase is only a tracking layer above it.
 ## The two execution modes
 
 - **Pipeline** — the normal path: `plan → align → branch → commit slices →
-  PR → verify (smoke + CI)`. Use for anything non-trivial.
+  PR → agent checks (tests/CI) → human smoke`. Use for anything non-trivial.
 - **Hotfix** — urgent. Skip the plan doc and the PR ceremony, ship straight to
   `main`, keep a shorter definition-of-done (tests still green, docs still
   updated if behaviour changed). Use only when speed genuinely matters.
+
+## Verification split
+
+Two different owners — don't conflate them:
+
+- **Agent checks** — tests, lint, typecheck, codegen sync, CI. The agent runs
+  these and hands back something that passes them.
+- **Smoke verification** — exercising the changed UI/UX (or behaviour) flow in
+  a real run. **Done by the user, never by the agent.** The agent only flags
+  when smoke is needed and what to look at; it does not perform the smoke.
 
 ## Doc-driven, not skill-driven
 

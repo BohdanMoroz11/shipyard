@@ -20,6 +20,9 @@ Copy and tick these off before declaring completion:
 - [ ] One commit per logical change — no mixed-concern commits.
 - [ ] CI green — after the PR opens, the pipeline passes. Investigate and fix
       failures rather than ignoring them.
+- [ ] Smoke flagged for the user — if the change affects a runnable UI/UX (or
+      behaviour) flow, call out that **human smoke verification** is needed and
+      what to check. Do not perform the smoke yourself; the user owns it.
 ```
 
 ## Hotfix subset

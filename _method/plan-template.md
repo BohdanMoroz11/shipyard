@@ -26,20 +26,24 @@ original intent visible — don't launder it into implementation-speak.
 Current state, what needs to change, and the rough approach. Call out anything
 surprising or risky here.
 
-## Open questions / risks
+## Decisions
 
-Numbered. These block coding until resolved. Ask them before writing code.
+Numbered. These block coding until resolved. For each item, propose an answer
+up front (don't just ask blank questions) — include risks the user should know
+and how you'd handle them. Then **stop and wait**. When the user answers, mark
+the item resolved in place (don't move it to a separate section).
 
-1. ...
-2. ...
+1. **Q:** ...
+   - **Proposed:** ...
+   - **Risks:** ...
+   - **Mitigation:** ...
+   - **Status:** open | resolved — <user's choice / confirmation>
 
-## Resolved decisions
-
-Fill in as the user answers. This table is the alignment record.
-
-| # | Question | Choice |
-| --- | --- | --- |
-| 1 | ... | ... |
+2. **Q:** ...
+   - **Proposed:** ...
+   - **Risks:** ...
+   - **Mitigation:** ...
+   - **Status:** open | resolved — ...
 
 ## Commit slices
 
@@ -52,8 +56,8 @@ The ordered commits (tasks) this stage will ship as. One logical change each.
 
 ## Rules
 
-- **Open questions come before code.** Write them, wait for answers, fold them
-  into the decisions table. Don't guess on collaborative choices.
+- **Decisions come before code.** Write questions with proposed answers, wait
+  for the user, mark status in place. Don't guess on collaborative choices.
 - **Keep it living.** Update status and slices as reality changes; a stale plan
   is worse than none.
 - **Docs are always a slice.** If behaviour changes, a docs commit is part of
