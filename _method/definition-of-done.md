@@ -12,12 +12,16 @@ Copy and tick these off before declaring completion:
       and interaction conventions; don't invent a new style. Read a sibling
       screen/component first.
 - [ ] Docs updated — every behaviour change is reflected in the project's
-      canonical docs (domain docs, ADRs, plan doc). This is the one that slips
-      most; do it in the same stage.
+      canonical docs (domain docs, ADRs, the stage doc). This is the one that
+      slips most; do it in the same stage.
 - [ ] Lint + typecheck pass — run the project's configured commands.
 - [ ] Generated artifacts in sync — if the repo has codegen (API client,
       schema, etc.), regenerate and commit it together with the source change.
-- [ ] One commit per logical change — no mixed-concern commits.
+- [ ] One commit per task — one logical change each, no mixed-concern commits;
+      the stage doc's task markers reflect what actually landed, and the phase
+      doc's marker for this stage is current.
+- [ ] Milestone holds — the stage's stated milestone is actually true, not
+      approximately true.
 - [ ] CI green — after the PR opens, the pipeline passes. Investigate and fix
       failures rather than ignoring them.
 - [ ] Smoke flagged for the user — if the change affects a runnable UI/UX (or

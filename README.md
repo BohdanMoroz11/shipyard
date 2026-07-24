@@ -13,18 +13,18 @@ at runtime, so the same skillset works across every repo.
 
 | Level | Size | Skill |
 | --- | --- | --- |
-| **Phase / initiative** | many sessions, vague goal | [`plan-roadmap`](plan-roadmap/SKILL.md) |
-| **Stage** | one PR, one session | [`plan`](plan/SKILL.md) → [`ship`](ship/SKILL.md) |
-| **Task** | one commit | (a slice within `ship`) |
+| **Phase** | many sessions, vague goal | [`plan-phase`](plan-phase/SKILL.md) |
+| **Stage** | one PR, one session | [`plan-stage`](plan-stage/SKILL.md) → [`ship`](ship/SKILL.md) |
+| **Task** | one commit | (a task within `ship`) |
 | **Urgent** | straight to main | [`hotfix`](hotfix/SKILL.md) |
 | **Onboarding** | audit readiness, then remediate | [`audit-repo`](audit-repo/SKILL.md) → [`prep-repo`](prep-repo/SKILL.md) |
 
 Shared vocabulary and templates live in [`_method/`](_method/) — plain markdown
 the skills link to (not skills themselves):
 
-- [`_method/vocabulary.md`](_method/vocabulary.md) — phase/stage/task + modes + verification split
-- [`_method/plan-template.md`](_method/plan-template.md) — stage plan-doc shape
-- [`_method/phase-template.md`](_method/phase-template.md) — phase roadmap-doc shape
+- [`_method/vocabulary.md`](_method/vocabulary.md) — phase/stage/task, status markers, who verifies what
+- [`_method/stage-template.md`](_method/stage-template.md) — stage-doc shape
+- [`_method/phase-template.md`](_method/phase-template.md) — phase-doc shape
 - [`_method/definition-of-done.md`](_method/definition-of-done.md) — the gate
 
 ## Install
@@ -42,19 +42,19 @@ If you already have skills there, symlink each skill dir and `_method`:
 
 ```bash
 mkdir -p ~/.cursor/skills
-for d in audit-repo prep-repo plan plan-roadmap ship hotfix _method; do
+for d in audit-repo prep-repo plan-stage plan-phase ship hotfix _method; do
   ln -s /absolute/path/to/shipyard/$d ~/.cursor/skills/$d
 done
 ```
 
-Then restart Cursor (or reload skills) and invoke by name, e.g. `plan`.
+Then restart Cursor (or reload skills) and invoke by name, e.g. `plan-stage`.
 
 ## Usage
 
 All skills are **explicitly invoked** (they don't auto-fire). Typical session:
 
 1. New/existing repo not set up yet → `audit-repo` (report), then `prep-repo` (fix gaps).
-2. Big multi-session goal → `plan-roadmap`, then per stage:
-3. `plan` — align on the stage, write the plan doc.
-4. `ship` — branch, commit plan + slices, tests, docs, PR, agent checks; you smoke.
+2. Big multi-session goal → `plan-phase`, then per stage:
+3. `plan-stage` — align on the stage, write the stage doc.
+4. `ship` — branch, commit the stage doc then one commit per task, tests, docs, PR, agent checks; you smoke.
 5. Urgent one-off → `hotfix`.

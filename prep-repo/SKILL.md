@@ -41,8 +41,8 @@ Prefer minimal, convention-matching additions over rewrites.
 - **Small remediation** — apply the fixes directly (scaffold doc structure,
   wire commands, add missing stubs with clear TODOs).
 - **Large remediation** — if it spans many files or needs collaborative
-  decisions, create a stage plan (use `../_method/plan-template.md`) and drive
-  it through `plan` / `ship` instead of dumping a mega-diff here.
+  decisions, write a stage doc (use `../_method/stage-template.md`) and drive it
+  through `plan-stage` / `ship` instead of dumping a mega-diff here.
 
 ### 4. Summarize
 
@@ -53,5 +53,6 @@ pass is worth it.
 
 - Don't fabricate domain content. Scaffold doc *structure* and leave clearly
   marked TODOs for the owner to fill business rules.
-- This skill sets a repo up; it doesn't ship features. Once ready, use `plan`.
+- This skill sets a repo up; it doesn't ship features. Once ready, use
+  `plan-stage`.
 - Don't start implementing without an agreed gap list — audit first.

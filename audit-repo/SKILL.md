@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # audit-repo — readiness report only
 
-The other skills (`plan`, `ship`, `hotfix`) are **doc-driven**: they read a
+The other skills (`plan-stage`, `ship`, `hotfix`) are **doc-driven**: they read a
 repo's docs to learn its conventions. This skill checks whether those docs —
 and the surrounding tooling — actually exist, then **stops**. Remediation is
 `prep-repo`.
@@ -30,7 +30,9 @@ Inspect the repo and grade each item **present / partial / missing**:
 - **Docs tree** — a `docs/` (or equivalent) with: a **plans hub** (README
   describing the working model + a backlog), **domain docs**, and a
   **decisions/ADR** dir.
-- **Plans dir + naming** — a place plan docs live and a naming convention.
+- **Plans dir + naming** — a place phase and stage docs live, with a naming
+  convention and a dir-per-phase layout (one file per stage, never tasks in the
+  phase doc).
 - **Lint + format** — configured, with a single command to run.
 - **Typecheck / build** — a command that fails on type errors.
 - **Tests** — a runner, a conventions doc, a command; ideally an expectation of
