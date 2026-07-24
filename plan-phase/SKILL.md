@@ -45,6 +45,11 @@ short — the question, the options, a note when there's a real tradeoff. Then s
 and wait. Stage-level questions belong to that stage's `plan-stage` pass; don't
 pre-answer them here.
 
+Unanswered ones live in the phase doc's **Open decisions** table; answered ones
+move to **Resolved decisions** with the date. A phase runs for weeks, so the date
+is what distinguishes a live decision from one the plan has moved past — and
+those entries are the raw material for the ADRs its stages will distil.
+
 ### 4. Decompose into stages
 
 An ordered list of stages, each small enough to be one PR / one session. Per
@@ -62,8 +67,8 @@ stage nobody has started.
 Use `phase-template.md` (or the project's existing style), in the layout the
 project uses for phases (see `vocabulary.md` → One doc per stage; default is a
 dir per phase with the phase doc as its `README.md`). Current state must be
-legible at a glance from the status markers. Note the project-wide exit criteria
-every stage clears, read from the repo's own docs. Update the doc as stages land —
+legible at a glance from the status markers. Note the project-wide standing
+requirements every stage clears, read from the repo's own docs. Update the doc as stages land —
 add each stage doc's link when `plan-stage` writes it.
 
 ## Boundaries

@@ -5,27 +5,27 @@ thing everywhere.
 
 ## Three words: phase, stage, task
 
-There are exactly three units of work, and no synonyms for them. Never write
-"roadmap", "plan", "initiative", "epic", "todo", "slice", "batch", or "request"
-to mean one of these — write phase, stage, or task.
+Three units of work. Use these names for them — synonyms are how two projects
+become unreadable side by side.
 
-| Word | Size | Where it lives |
-| --- | --- | --- |
-| **Phase** | many sessions, many PRs | a **phase doc** — an overview only |
-| **Stage** | one session, one PR | its **own stage doc** |
-| **Task** | one commit | a line in its stage doc |
+| Word | Size | Where it lives | Written by |
+| --- | --- | --- | --- |
+| **Phase** | many sessions, many PRs | a **phase doc** — an overview only | `plan-phase` |
+| **Stage** | one session, one PR | its **own stage doc** | `plan-stage` |
+| **Task** | one commit | a numbered line in its stage doc | executed by `ship` |
 
-- **Phase** — a big goal with a vague edge (days–weeks). Never built in one go.
-  Its doc is an **overview**: the goal, the cross-cutting decisions, and the
-  ordered list of stages with their status. Written by `plan-phase`.
-- **Stage** — the working unit. One theme, one PR, one session, ending at a
-  **milestone**: something concretely demoable. Every stage gets **its own doc**,
-  which holds its context and its tasks. Written by `plan-stage`.
-- **Task** — one logical change = one commit. Lives in its stage's doc, never in
-  the phase doc. Executed by `ship`.
+- A **phase** is a big goal with a vague edge (days–weeks), never built in one
+  go. Its doc is an overview: the goal, the cross-cutting decisions, and the
+  ordered list of stages with their status.
+- A **stage** is the working unit, ending at a **milestone** — something
+  concretely demoable. It carries **one or more requests** (`R1`, `R2`, …), not
+  necessarily one theme.
+- A **task** is one logical change. Not a "commit slice", not a "deliverable".
 
-If a "phase" fits in one PR, it was a stage. If a "stage" needs several PRs,
-it's a phase — split it.
+If a "phase" fits in one PR, it was a stage. If a "stage" needs several PRs, it's
+a phase — split it. The test is **PR size, not thematic purity**: a stage that
+ships five loosely related client requests as one reviewable PR is one stage, not
+five.
 
 ## One doc per stage
 
@@ -57,7 +57,9 @@ it gets a doc in the plans dir like any other.
 
 ## Status markers
 
-Every stage list and task list uses the same three markers, and nothing else:
+**Markers track work that spans sessions. Nothing else gets them.**
+
+A **phase doc's stage list** uses these three markers, and nothing else:
 
 ```
 - [ ] not started
@@ -65,8 +67,18 @@ Every stage list and task list uses the same three markers, and nothing else:
 - [x] done
 ```
 
-Status lives in the marker. No status columns, no progress tables, no per-doc
-variations.
+A **stage doc's task list** uses **none of them** — tasks are a numbered list.
+
+Why the line falls there: a phase runs across many sessions, so its state is
+knowable only from its doc, and the doc must carry it. A stage is one session and
+one PR — its state is already in `git log`, the PR, and the doc's status line.
+A marker per task is a second copy of that state, and it goes stale the moment a
+stage lands a fix commit that wasn't in the plan (which is most stages). The task
+list is the **plan of record**, amended when reality diverges; it is not a
+progress tracker.
+
+Live state in a stage doc lives in exactly one place: the status line under the
+title. No status columns, no progress tables, no per-doc variations.
 
 ## Docs carry the context
 
@@ -82,6 +94,26 @@ normal. One-liners are only for genuinely trivial tasks.
 When reality diverges after the fact, amend the description in place with a
 dated note rather than silently rewriting history — the doc is the record.
 
+## Three doc layers — provenance, behaviour, constraint
+
+Every project doc answers one of three questions. Keeping them apart is what
+stops a plans dir from silently becoming the source of truth:
+
+| Layer | Answers | Lives in |
+| --- | --- | --- |
+| **Provenance** | why we built it this way, at the time | stage + phase docs, archived when shipped |
+| **Behaviour** | what the system does now | domain docs |
+| **Constraint** | what future work may not do | ADRs |
+
+A shipped stage doc is **history**. It is kept, linked, and never deleted — but
+it is not what a reader consults to learn how the system behaves today. `ship`
+distils it into the other two layers before archiving it (see `ship` step 5).
+
+The constraint layer earns its own files because it must survive its plan doc's
+archival: an ADR is cited by number from anywhere and stays valid. A decision
+that doesn't bind future work isn't an ADR — it stays in the archived stage doc,
+which is a perfectly good home.
+
 ## Two ways to ship
 
 - **Pipeline** — the normal path: plan the stage, align, branch, one commit per
@@ -96,16 +128,26 @@ Two different owners — don't conflate them:
 
 - **Agent checks** — tests, lint, typecheck, codegen sync, CI. The agent runs
   these and hands back something that passes them.
-- **Smoke verification** — exercising the changed flow in a real run. **Done by
-  the user, never by the agent.** The agent flags that smoke is needed and what
-  to look at; it does not perform it.
+- **Smoke verification** — exercising the changed flow in a real run, and
+  **signing off on it**. That sign-off is the user's, always.
+- **Deploying a rollout runbook** — also the user's. The agent writes it; it
+  doesn't run it.
+
+The agent may drive the app to check its own work — that's testing, and it's
+encouraged where the tooling exists. What it may not do is treat its own pass as
+the verification. It says what it checked, then says what the user still needs to
+look at.
 
 ## Decisions before code
 
 Most stages need no input beyond the initial ask — just build them. When a
 choice genuinely belongs to the user (stack, data model, UX tradeoff), the agent
-asks it in the doc's **Decisions** section, waits, then builds. Never guess a
-decision that is the user's to make.
+asks it in the doc's **Resolved decisions** section, waits, then builds. Never
+guess a decision that is the user's to make.
+
+Everything smaller goes to **Residual questions**: state the assumption, flag it
+for correction, keep moving. Blocking is for the few choices that are genuinely
+the user's — not for every fork in the road.
 
 ## Doc-driven, not skill-driven
 

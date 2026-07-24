@@ -18,7 +18,7 @@ First read `../_method/vocabulary.md`. If there is no report yet, suggest
 ```
 - [ ] 1. Load the agreed report (or the user's gap list)
 - [ ] 2. Confirm scope — which gaps to fix now
-- [ ] 3. Implement (or hand large work to plan/ship)
+- [ ] 3. Implement — docs/scaffolding and tooling directly; product code as a stage
 - [ ] 4. Summarize what changed; note anything still open
 ```
 
@@ -34,15 +34,50 @@ Confirm which gaps to fix in this pass. Don't silently expand into "also tidy
 everything else." Facts only the repo owner can decide (money model, timezone,
 naming) stay as **open decisions** — propose, don't guess.
 
-### 3. Implement
+### 3. Implement — sorted by what the fix touches, not by how big it is
+
+"Small enough to just do" is a judgment call that lands differently every time.
+The question that actually matters is **does this change product code?** Three
+categories, one sorting question:
+
+**A — docs and scaffolding.** Doc structure, a plans hub, an archive dir with its
+provenance README, an `AGENTS.md`, moving a foreign format into the archive,
+extracting ADRs out of a plan doc. Touches no product code and cannot break a
+build. **Do it, however large it is** — a fifteen-file migration is still
+Category A.
+
+**B — tooling and config.** A lint config, a typecheck script, a CI workflow, a
+codegen gate. No product logic, but it gates everyone's work and can go red.
+**Do it, one commit per item, each verified green before starting the next.**
+
+**C — anything that changes product code.** Fixing the errors your new lint
+config just surfaced, writing the missing test suite, splitting an oversized
+file. **Always a stage** — write a stage doc (`../_method/stage-template.md`) and
+drive it through `plan-stage` / `ship`. No size exception, no "it's only a few
+files".
+
+Work the report's gap list **in its order, one gap at a time, reporting between
+each**, so a large prep is a sequence the user can stop rather than one mega-diff.
 
 Prefer minimal, convention-matching additions over rewrites.
 
-- **Small remediation** — apply the fixes directly (scaffold doc structure,
-  wire commands, add missing stubs with clear TODOs).
-- **Large remediation** — if it spans many files or needs collaborative
-  decisions, write a stage doc (use `../_method/stage-template.md`) and drive it
-  through `plan-stage` / `ship` instead of dumping a mega-diff here.
+### 3a. Migrating an existing docs corpus
+
+When the conformance pass found legacy or foreign-format docs, the migration is
+**additive and archival only**:
+
+- **Never delete or rewrite a legacy doc.** Move it to the archive and add a
+  provenance README saying these explain *why*, not *what is true now*. The
+  cost of keeping a stale doc in an archive is near zero; the cost of destroying
+  the reasoning behind a decision is permanent.
+- **Don't rename history to match the convention.** New docs follow the format;
+  old ones keep their names and get archived. Renaming breaks every inbound link
+  for no behavioural gain.
+- **Extract decisions, don't summarise them.** A decision that passes the ADR
+  gate (`ship` step 5) becomes `docs/decisions/NNNN-slug.md` carrying its
+  original reasoning and what it rejected. Link back to the source doc.
+- **One format going forward.** After the migration, exactly one shape is live.
+  Say so in the plans hub so the next agent doesn't copy the archived shape.
 
 ### 4. Summarize
 
@@ -56,3 +91,5 @@ pass is worth it.
 - This skill sets a repo up; it doesn't ship features. Once ready, use
   `plan-stage`.
 - Don't start implementing without an agreed gap list — audit first.
+- **Never touch product code here.** That's Category C and it's always a stage,
+  no matter how mechanical it looks.

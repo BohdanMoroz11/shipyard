@@ -34,16 +34,24 @@ shape the order (dependencies, migrations, external dates, a single-replica
 limit — whatever will bite). Be honest about work that shipped outside the plan;
 the doc is only useful if it matches reality.
 
-## Decisions
+## Open decisions
 
-Only questions that affect **several stages** or the order itself. Same shape as
-in a stage doc: the question, the options, a note when one is warranted, the
-answer recorded in place. Per-stage questions wait for that stage's own
-`plan-stage` pass.
+Only questions that affect **several stages** or the order itself, still
+unanswered. Per-stage questions wait for that stage's own `plan-stage` pass.
 
-1. **<question>?**
-   Options: <a> / <b>. Leaning: <a>.
-   → **Answer:** ...
+| # | Question | Options | Status |
+| --- | --- | --- | --- |
+| 3 | <question> | <a> vs <b> | <what would settle it, and when> |
+
+## Resolved decisions
+
+Answered cross-cutting decisions, newest first, **each dated**. A phase runs for
+weeks — the date is what lets a reader tell a live decision from one the plan has
+already moved past. Keep the reasoning, not just the choice; this section is the
+raw material for the ADRs the stages will distil.
+
+- **<the decision>** (YYYY-MM-DD): <what was chosen and why, including what it
+  rules out>.
 
 ## Stages
 
@@ -59,22 +67,26 @@ doc. **Tasks live in those docs, not here.**
 - [ ] **S3 — <title>** — <one-line goal>; needs S2 for <reason>. Doc written when
       the stage is picked up.
 
-## Exit criteria (every stage)
+## Standing requirements (every stage)
 
-The bar each stage clears before it counts as done — the project-wide ones that
-would otherwise get relitigated per stage (integration test per endpoint, codegen
-diff clean, cross-tenant isolation asserted, and so on). Read the repo's own docs
-for the real list; don't invent it.
+The bar each stage clears on top of its own milestone — the project-wide ones
+that would otherwise get relitigated per stage (integration test per endpoint,
+codegen diff clean, cross-tenant isolation asserted, and so on). Read the repo's
+own docs for the real list; don't invent it.
+
+Not to be confused with a stage's **milestone**, which is that one stage's own
+demoable outcome. These are the standing ones that apply to all of them.
 
 ## Order and parallelism
 
 Which stages are independent, which are gated on which, and where two can run
 side by side. One bullet per non-obvious dependency.
 
-## Out of scope
+## Non-goals
 
 What this phase deliberately doesn't cover, and where it went — the next phase,
-the backlog, or nowhere on purpose.
+the backlog, or nowhere on purpose. Same name as the stage doc's section; same
+job, one level up.
 ```
 
 ## Rules

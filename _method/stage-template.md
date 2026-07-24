@@ -1,7 +1,7 @@
 # Stage-doc template
 
-A stage doc is a **living document**: forward-looking pre-work before the PR,
-and the historical record of *why* it was built this way afterwards. It is the
+A stage doc is a **living document**: forward-looking pre-work before the PR, and
+the historical record of *why* it was built this way afterwards. It is the
 primary place this stage's context lives — write it for the agent that picks the
 work up next session with no memory of this conversation.
 
@@ -9,79 +9,138 @@ Every stage gets **its own file** — either in a phase's dir alongside that
 phase's other stages, or directly in the plans dir when the stage stands alone
 (see `vocabulary.md` → One doc per stage). Never as a section of the phase doc.
 
-Match the project's existing style if it has one (read a recent stage doc
-first). Otherwise use this shape.
+## Every section is required
+
+The shape below is not a menu. **Write every section, under these names, in this
+order**, even when a section is one line — `Prod risk: none, additive and
+revert-safe` is a complete and useful answer. The point of a fixed shape is that
+any stage doc in any repo can be read the same way, and that the sections nobody
+enjoys writing (Prod risk, Non-goals) don't quietly disappear.
+
+If a section is genuinely empty, say so in it. Don't delete the heading.
+
+Match the project's file naming and link conventions if it has them (read a
+recent stage doc first). The section list is not negotiable per-project; the
+naming and location of the file is.
 
 ## Shape
 
 ```markdown
 # <Stage title>
 
-> **Status: planning | in progress | shipped (YYYY-MM-DD).** One-line summary of
-> the single theme of this stage.
+> **Status: planning | in progress | shipped (YYYY-MM-DD).** One line on what
+> this stage is.
 
 Part of: <link to the phase doc, or "standalone — no phase">.
 Canonical behaviour: <link to the domain doc(s) this touches>.
 Rationale: <link to ADR, if a notable decision was made>.
 
-## The request
+## Goal
 
-What the user asked for, in their words (paraphrased is fine), including the
-constraints they stated. Keep the original intent visible — don't launder it
-into implementation-speak.
+What is true when this stage is done, in two or three sentences. The outcome,
+not the implementation.
 
-## Context
+## Why now
 
-What exists today that this stage builds on, with real names and paths: the
-modules and files involved, what the current behaviour is, what's already
+What makes this the next thing — the client asked, it blocks a later stage, it's
+bleeding in production, a dependency just landed. One paragraph. A stage that
+can't answer this probably belongs in the backlog.
+
+## Context (as of YYYY-MM-DD)
+
+What exists today that this stage builds on, with real paths and `file:line`
+citations: the modules involved, the current behaviour, what's already
 half-built, and the surprises worth knowing (a schema field that exists but is
-unused, a helper that already accepts the param nobody passes). This is the
-section that saves the next session an hour of code reading — be specific and
-generous.
+unused, a helper that already accepts the param nobody passes). Name the gap
+that makes the work necessary or hard.
 
-## Approach
+Date the heading. Context goes stale; a dated section says so honestly instead
+of misleading the next reader.
 
-The shape of the change and why this way over the alternative. Call out anything
-risky, anything deliberately deferred, and any constraint the implementation
-must respect.
+This is the section that saves the next session an hour of code reading. Be
+specific and generous — it is normal for it to be the longest section in the doc.
 
-## Decisions
+## R1 — <request title>
 
-Questions that need the user's answer before coding. Keep each as short as the
-question deserves — the question and the options you see. Add a note only when
-there's something the user would actually want to know (a real risk, a tradeoff,
-a cost). Record the answer in place; don't move it elsewhere.
+One section per request this stage carries, numbered `R1`, `R2`, … — always,
+even when there is only one. Each holds that request's ask, its design, and the
+surfaces it touches.
 
-1. **<question>?**
-   Options: <a> / <b>. Leaning: <a>.
-   → **Answer:** ...
+A stage is one PR and one session; it is **not** limited to one theme. Real work
+arrives as a handful of related-enough asks, and shipping them as one reviewable
+PR is correct. Numbering them keeps a five-request PR legible.
 
-2. **<question>?**
-   Options: <a> / <b>.
-   Note: <the tradeoff or risk worth flagging — only when there is one>.
-   → **Answer:** ...
+Quote or paraphrase the ask itself before the design — keep the original intent
+visible rather than laundering it into implementation-speak.
+
+## R2 — <request title>
+
+<same>
 
 ## Tasks
 
-One commit each, in order. `- [ ]` not started · `- [ ] _(in progress)_` ·
-`- [x]` done. Slugs (`<stage>-<area>`) so other docs can reference a task.
+One logical change each, in order. Numbered — **no checkboxes** (see
+`vocabulary.md` → Status markers). This is the plan of record for how the work
+splits into commits; it is written before the work and amended when reality
+diverges, not maintained as live progress state.
 
-- [ ] **<slug>** — <a full description: what changes, in which files/modules,
-      the names and shapes involved, the constraints it must respect, links to
-      the domain doc or ADR it implements, and the end state that proves it
-      works>
-- [ ] **<slug>** — <same>
-- [ ] **docs** — <which docs change and how>
+Each task names what changes, **which files and modules**, the shapes and names
+involved, the constraints it must respect, the docs or ADRs it implements, and
+the end state that proves it works. Several sentences to a paragraph is normal;
+a one-line task is a bug unless the task is genuinely trivial. The file paths in
+these descriptions are what a reader uses to find the work — don't summarise
+them away.
+
+1. **<slug>** — <full description>
+2. **<slug>** — <full description>
+3. **docs** — <which docs change and how>
+
+Docs are always a task, never an afterthought.
 
 ## Milestone
 
-The one concrete, demoable thing that's true when this stage is done — phrased
-so it can be checked, not felt.
+The one concrete, demoable thing that is true when this stage is done — phrased
+so it can be checked, not felt. If the project calls this "exit criteria", it is
+the same thing under a different name; use "Milestone".
 
-## Out of scope
+## Resolved decisions (YYYY-MM-DD)
 
-What a reader might reasonably expect here but won't find, and where it went
-(later stage, backlog, deliberately never).
+The questions that needed the user's answer, and what was chosen. During
+planning this section holds the open questions and blocks the work; once
+answered it becomes the record, and the design in the R-sections reflects it.
+
+| # | Question | Choice |
+| --- | --- | --- |
+| 1 | <question> | <what was chosen, and the reason if it isn't obvious> |
+| 2 | <question> | <choice> |
+
+Only questions that genuinely belong to the user — stack, data model, UX
+tradeoff, anything ambiguous in the ask. Most stages have a handful at most.
+
+## Residual questions
+
+Smaller things settled by assumption rather than by asking, so the work isn't
+blocked on them. State the assumption and invite correction — "assumed yes;
+confirm during build if this feels wrong". This is the pressure valve that keeps
+the Resolved-decisions gate from stalling the stage over trivia.
+
+1. **<assumption>** — <what was assumed and why it's probably right>
+
+## Non-goals
+
+What a reader might reasonably expect here but won't find, and where it went — a
+later stage, the backlog, or deliberately never.
+
+## Prod risk
+
+What could break in production and what the blast radius is. Then the question
+that decides whether this stage needs a rollout runbook:
+
+> **Does `git revert` + redeploy fully undo this?**
+
+Answer it explicitly. Destructive migrations, deploy-topology changes, and
+cutovers answer *no* — those need a runbook. Additive features answer *yes* and
+this section is one line.
 ```
 
 ## A task description, sized right
@@ -89,38 +148,39 @@ What a reader might reasonably expect here but won't find, and where it went
 Too thin — the next session has to re-derive everything:
 
 ```markdown
-- [ ] **api** — add the export endpoint
+1. **api** — add the export endpoint
 ```
 
 Right — the description *is* the context:
 
 ```markdown
-- [ ] **s4-exports** — `POST /export` streaming CSV with the 37 NetSuite columns
-      (verbatim field order from `LoL-main/exports.py`) and the
-      OR-of-quick-pay/direct-payment row filter. Stream through `csv-stringify`
-      so a full-year export can't OOM the pod; the endpoint must stay inside the
-      tenant-scoped Prisma extension. Column contract and the filter rationale:
-      [netsuite-csv.md](../integrations/netsuite-csv.md). End state: an export of
-      the seed tenant's paid loads imports into NetSuite with zero rejected rows.
+1. **s4-exports** — `POST /export` streaming CSV with the 37 NetSuite columns
+   (verbatim field order from `LoL-main/exports.py`) and the
+   OR-of-quick-pay/direct-payment row filter. Stream through `csv-stringify` so
+   a full-year export can't OOM the pod; the endpoint must stay inside the
+   tenant-scoped Prisma extension. Column contract and the filter rationale:
+   [netsuite-csv.md](../integrations/netsuite-csv.md). End state: an export of
+   the seed tenant's paid loads imports into NetSuite with zero rejected rows.
 ```
 
 When reality diverges later, amend in place with a dated note rather than
 rewriting:
 
 ```markdown
-- [x] **s4-exports** — ... End state: ... **2026-05-22:** the brokerage
-      multi-select moved to the loads page filter bar instead; the export modal
-      now reads its filters from the URL state, so the two surfaces can't drift.
+1. **s4-exports** — ... End state: ... **2026-05-22:** the brokerage
+   multi-select moved to the loads page filter bar instead; the export modal now
+   reads its filters from the URL state, so the two surfaces can't drift.
 ```
 
 ## Rules
 
-- **Decisions come before code.** Ask, wait, record the answer in place. Don't
-  guess a choice that's the user's to make.
-- **Tasks are commits.** One logical change each; if a task needs two commits,
-  it's two tasks.
+- **Every section, every time.** One line beats a missing heading.
+- **Decisions come before code.** Ask the few that are the user's, assume the
+  rest into Residual questions, and don't guess a choice that isn't yours.
+- **Tasks are numbered, not checked.** Progress within a stage lives in `git log`
+  and the PR, not in doc markers.
 - **Descriptions are long on purpose.** They're the context store, not a
   checklist label.
-- **Keep it living.** Update the status line and the task markers as work lands.
-- **Docs are always a task.** If behaviour changes, a docs commit is part of the
-  stage, not an afterthought.
+- **Keep the status line current.** It is the one piece of live state in the doc.
+- **Amend, don't rewrite.** When reality diverges, add a dated note in place —
+  the doc is the record.
