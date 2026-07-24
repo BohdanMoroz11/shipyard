@@ -4,7 +4,10 @@ The gate a stage (or hotfix) must pass before it's "done". Shared by `ship` and
 `hotfix`. Treat it as a checklist, not a suggestion — these are the things that
 otherwise get forgotten.
 
-Copy and tick these off before declaring completion:
+Copy and tick these off before declaring completion. They are **transient
+session state** — a scratch checklist you work through and report from. They
+never land in a committed doc, which carries no task markers at all
+(`vocabulary.md` → Status markers).
 
 ```
 - [ ] Tests green — new behaviour has tests; the full suite passes locally.
@@ -14,10 +17,8 @@ Copy and tick these off before declaring completion:
 - [ ] Domain doc distilled — behaviour changes are stated in the project's
       canonical domain doc in the present tense, as though always true. Not a
       changelog entry, not "we now also…". This is the gate that slips most.
-- [ ] ADR written, or consciously not — an ADR only when (a) a future PR would
-      be wrong without knowing this and (b) nothing mechanical already enforces
-      it. Otherwise none; the reasoning survives in the archived stage doc. More
-      than one from a single stage is a smell.
+- [ ] ADR written, or consciously not — run the gate in `adr-gate.md`. Most
+      stages produce none; that's the expected answer, not a miss.
 - [ ] Stage doc archived — moved to the plans archive with its link updated in
       the plans hub, once the stage has shipped.
 - [ ] Lint + typecheck pass — run the project's configured commands.
@@ -43,14 +44,21 @@ Copy and tick these off before declaring completion:
 
 ## Hotfix subset
 
-A hotfix skips the PR/CI ceremony but still owes:
+A hotfix skips the planning ceremony but still owes:
 
 ```
 - [ ] Tests green (at least a regression test for the bug being fixed).
 - [ ] Domain doc updated if behaviour changed — same gate as a stage, in the
       same commit. A hotfix skips the ceremony, not the canonical docs.
 - [ ] Lint + typecheck pass.
+- [ ] CI green — only if the repo forced a PR (see `vocabulary.md` →
+      Integration route). Merging a red hotfix PR is worse than the bug.
+- [ ] Route reported — the user is told whether the fix went direct to `main`
+      or through a merged PR.
 ```
+
+This is the **hotfix** subset, not the small-change subset. A small non-urgent
+change is an ordinary stage and owes the full list above.
 
 ## Where the specifics live
 

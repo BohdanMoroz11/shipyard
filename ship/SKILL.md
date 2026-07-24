@@ -6,8 +6,8 @@ disable-model-invocation: true
 
 # ship — execute a stage → PR → verify
 
-Turns an aligned stage (from `plan-stage`) into a merge-ready PR. For urgent
-changes that skip the stage doc and the PR, use `hotfix` instead.
+Turns an aligned stage (from `plan-stage`) into a merge-ready PR. Urgent changes
+that skip the stage doc are `hotfix`'s job, not a mode of this skill.
 
 First read:
 - `../_method/vocabulary.md` — stage/task, status markers, who verifies what
@@ -42,10 +42,9 @@ task at a time**: make the change, verify it, commit it right away. One logical
 change per commit; no mixed-concern commits. Run `git` unsandboxed if the repo
 requires it (check its docs).
 
-Don't tick task markers — there aren't any. Progress lives in `git log` and the
-doc's status line (see `vocabulary.md` → Status markers). What you *do* keep
-current is the status line, and any task description whose reality diverged —
-amend those in place with a dated note. The doc is the record.
+Don't tick task markers — there aren't any (`vocabulary.md` → Status markers).
+What you *do* keep current is the status line, and any task description whose
+reality diverged — amend those in place with a dated note. The doc is the record.
 
 ### 4. Tests + UI/UX as you go
 
@@ -63,28 +62,13 @@ present tense, as though it had always been true. A domain doc that reads like a
 changelog ("we now also…") has failed. If no domain doc covers this surface yet,
 create one.
 
-**ADR — only when it binds future work.** Two questions, both must be yes:
+**ADR — only when it binds future work.** Run the gate in
+`../_method/adr-gate.md` — two questions, both must be yes — and write the ADR
+into this stage's commits if it passes. Most stages produce none, and that's the
+expected outcome, not a miss. Don't re-derive the bar from memory; read the file.
 
-1. **Would a future PR be wrong if its author didn't know this?**
-2. **Is there nothing mechanical already enforcing it?**
-
-"Money is integer cents" passes both — a `BigInt` holding dollars typechecks
-fine and fails as wrong numbers in production. "Vitest, not Jest" fails the
-second: the config and the testing doc already enforce it, so it's a domain doc.
-"This page uses a modal, not a detail route" fails the first: the next author
-copies the neighbouring page.
-
-Write it as `docs/decisions/NNNN-slug.md` (or the repo's existing convention),
-recording **what was rejected and why**, not just what was chosen. Allocate the
-number **at merge time** — two branches that both grab `0016` collide.
-
-**More than one ADR from a single stage is a smell.** It usually means recording
-narration instead of constraints; the right answer is normally zero ADRs and a
-better domain doc. Nothing is lost when the gate says no — the reasoning stays in
-the stage doc, which gets archived, not deleted. That's what lets the bar be high.
-
-If the stage belongs to a phase, update its marker in that phase doc's stage list
-— that's the tracking layer, and a stale one is worse than none.
+**Phase marker — if this stage has a phase.** Update its marker in that phase
+doc's stage list. That's the tracking layer, and a stale one is worse than none.
 
 ### 6–7. PR and verify
 
@@ -94,15 +78,14 @@ Open a PR with a summary drawn from the stage doc. Then run **agent checks**:
   diagnose and fix with a follow-up commit — don't leave it red.
 - **Smoke handoff**: if the change touches a runnable UI/UX or behaviour flow,
   tell the user smoke verification is needed and **list exactly what to look at**.
-  You may drive the app yourself to check your own work — that's just testing.
-  What you may not do is treat your own pass as the sign-off: the smoke belongs
-  to the user (see `vocabulary.md` → Who verifies what).
+  Drive the app yourself if you can — then say what you checked and what still
+  needs their eyes. The sign-off is theirs, never yours (`vocabulary.md` → Who
+  verifies what).
 
 ### 8. Rollout runbook — only when the stage isn't revert-safe
 
-Answer the stage doc's **Prod risk** question against the real diff:
-
-> **Does `git revert` + redeploy fully undo this?**
+Re-answer the stage doc's **Prod risk** question against the real diff — planning
+answered it against an intention, and diffs drift.
 
 **Yes, or the project has no production users** → no runbook. Say so and move on.
 
@@ -124,8 +107,10 @@ deploy, an amendment the user still owes.
 
 ## Boundaries
 
-- Don't merge unless the user asks; leave the PR ready and CI green.
+- Don't merge unless the user asks; leave the PR ready and CI green. (`hotfix`
+  is the one exception — see its step 6.)
 - Don't deploy. Write the runbook; the user runs it.
-- If mid-stage you discover it's really two stages, say so and split rather than
-  ballooning one PR. Two *requests* in one stage is normal — see
-  `vocabulary.md`; two PRs' worth of work is not.
+- If mid-stage you discover it's really two stages, **stop and say so** rather
+  than ballooning one PR — the user decides whether to split, and re-planning is
+  `plan-stage`'s job, not yours (`../_method/vocabulary.md` → Redirects). Two
+  *requests* in one stage is normal; two PRs' worth of work is not.

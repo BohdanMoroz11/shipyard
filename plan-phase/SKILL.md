@@ -12,7 +12,8 @@ decomposes the goal into stages and tracks state over time. It plans; it does no
 build, and it does not write stage docs or tasks.
 
 First read:
-- `../_method/vocabulary.md` — phase/stage/task, status markers, doc conventions
+- `../_method/vocabulary.md` — phase/stage/task, status markers, doc conventions,
+  redirects
 - `../_method/phase-template.md` — the phase-doc shape
 
 ## When this vs `plan-stage`
@@ -75,5 +76,5 @@ add each stage doc's link when `plan-stage` writes it.
 
 - No feature code, no tasks, no stage docs — hand each stage to `plan-stage` when
   you start it.
-- If the phase turns out to fit in one PR, it was a stage — switch to
-  `plan-stage`.
+- If the phase turns out to fit in one PR, it was a stage: stop, say so, and
+  tell the user to invoke `plan-stage` (`../_method/vocabulary.md` → Redirects).

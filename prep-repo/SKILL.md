@@ -10,7 +10,8 @@ Takes an **agreed readiness report** (from `audit-repo`, or a list of gaps the
 user already knows) and implements the fixes. It does not invent a fresh audit
 unless the user asks — start from the report.
 
-First read `../_method/vocabulary.md`. If there is no report yet, suggest
+First read `../_method/vocabulary.md` — including **Redirects**, since this skill
+hands work back more than most. If there is no report yet, ask the user to run
 `audit-repo` first.
 
 ## Workflow
@@ -26,13 +27,19 @@ First read `../_method/vocabulary.md`. If there is no report yet, suggest
 
 Use the readiness report from `audit-repo` in this conversation, a report the
 user pastes/points at, or an explicit gap list they give you. If none of those
-exist, run `audit-repo` (or ask the user to) before changing anything.
+exist, **stop and ask the user to invoke `audit-repo`** before changing anything
+(`../_method/vocabulary.md` → Redirects). Don't audit from scratch here.
 
 ### 2. Confirm scope
 
 Confirm which gaps to fix in this pass. Don't silently expand into "also tidy
 everything else." Facts only the repo owner can decide (money model, timezone,
 naming) stay as **open decisions** — propose, don't guess.
+
+The **integration route** is not one of those — it's observable. Record it in
+`AGENTS.md` (or the plans hub) as a plain statement: whether `main` takes direct
+commits or a hotfix must go through a fast-tracked PR. One line, and `hotfix`
+stops guessing.
 
 ### 3. Implement — sorted by what the fix touches, not by how big it is
 
@@ -42,19 +49,27 @@ categories, one sorting question:
 
 **A — docs and scaffolding.** Doc structure, a plans hub, an archive dir with its
 provenance README, an `AGENTS.md`, moving a foreign format into the archive,
-extracting ADRs out of a plan doc. Touches no product code and cannot break a
-build. **Do it, however large it is** — a fifteen-file migration is still
-Category A.
+extracting ADRs out of a plan doc, **recording the repo's integration route**.
+Touches no product code and cannot break a build. **Do it, however large it is**
+— a fifteen-file migration is still Category A.
 
 **B — tooling and config.** A lint config, a typecheck script, a CI workflow, a
 codegen gate. No product logic, but it gates everyone's work and can go red.
 **Do it, one commit per item, each verified green before starting the next.**
 
-**C — anything that changes product code.** Fixing the errors your new lint
-config just surfaced, writing the missing test suite, splitting an oversized
-file. **Always a stage** — write a stage doc (`../_method/stage-template.md`) and
-drive it through `plan-stage` / `ship`. No size exception, no "it's only a few
+**C — anything that changes product code.** Writing the missing test suite,
+splitting an oversized file, fixing a bug the new typecheck exposed. **Always a
+stage** — so it leaves this skill: name it in the summary as work for
+`plan-stage`, and don't start it here. No size exception, no "it's only a few
 files".
+
+**The one exception**, so that Category B is finishable in a single pass:
+errors surfaced by a tooling change *you just made in this prep* — the six lint
+violations your new config found — are part of **that** Category B item, fixed
+in its commit, when the fix is **mechanical** (a formatter's own output, an
+unused import, an explicit `any` the rule wanted annotated) **and the tests stay
+green**. The moment a fix needs a judgment call about behaviour, it's Category C
+and it stops being your call to make here.
 
 Work the report's gap list **in its order, one gap at a time, reporting between
 each**, so a large prep is a sequence the user can stop rather than one mega-diff.
@@ -74,8 +89,8 @@ When the conformance pass found legacy or foreign-format docs, the migration is
   old ones keep their names and get archived. Renaming breaks every inbound link
   for no behavioural gain.
 - **Extract decisions, don't summarise them.** A decision that passes the ADR
-  gate (`ship` step 5) becomes `docs/decisions/NNNN-slug.md` carrying its
-  original reasoning and what it rejected. Link back to the source doc.
+  gate (`../_method/adr-gate.md`) becomes `docs/decisions/NNNN-slug.md` carrying
+  its original reasoning and what it rejected. Link back to the source doc.
 - **One format going forward.** After the migration, exactly one shape is live.
   Say so in the plans hub so the next agent doesn't copy the archived shape.
 
@@ -88,8 +103,8 @@ pass is worth it.
 
 - Don't fabricate domain content. Scaffold doc *structure* and leave clearly
   marked TODOs for the owner to fill business rules.
-- This skill sets a repo up; it doesn't ship features. Once ready, use
-  `plan-stage`.
+- This skill sets a repo up; it doesn't ship features. Once ready, say so — the
+  user takes it from there with `plan-stage`.
 - Don't start implementing without an agreed gap list — audit first.
 - **Never touch product code here.** That's Category C and it's always a stage,
   no matter how mechanical it looks.

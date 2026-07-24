@@ -1,6 +1,6 @@
 ---
 name: plan-stage
-description: Write or refine a stage — one PR of work, carrying one or more requests — as its own living doc in the project's plans dir. Reads the repo's conventions, captures the requests and the existing context, settles the decisions that need the user, assumes the rest openly, and breaks the work into tasks with descriptions dense enough to hand off. Does not write feature code. Invoke explicitly.
+description: Write or refine a stage — one PR of work, carrying one or more requests — as its own living doc in the project's plans dir. Reads the repo's conventions, captures the requests and the existing context, settles the decisions that need the user, assumes the rest openly, and breaks the work into tasks with descriptions dense enough to hand off. Use for small non-urgent changes too — a one-commit change is still a stage, and its doc is simply short. Does not write feature code. Invoke explicitly.
 disable-model-invocation: true
 ---
 
@@ -33,7 +33,8 @@ First read:
 Read the repo's orientation docs (`AGENTS.md`/`CLAUDE.md`, the plans hub README
 or equivalent, and any domain doc the request touches). Never assume project
 rules — the docs decide them. If the repo clearly isn't set up for this flow,
-suggest `audit-repo` first (then `prep-repo` if gaps need fixing).
+stop and tell the user to invoke `audit-repo` first (then `prep-repo` if gaps
+need fixing) — `../_method/vocabulary.md` → Redirects.
 
 **A standalone stage is the normal case.** Most work is one stage with no phase
 above it; its doc goes straight in the plans dir and the plans hub's list is what
@@ -104,16 +105,21 @@ a two-release cutover instead of one). Reversibility is decided while planning,
 not while deploying.
 
 Then write the doc using `stage-template.md`, **every section, under its own
-name**. If the stage belongs to a phase, link it from that phase's stage list and
+name**. A one-commit stage answers most of them in a line each — see
+"A small stage, in full" — and that is the correct output, not a sign you should
+have trimmed the shape. If the stage belongs to a phase, link it from that phase's stage list and
 set its marker. Update the plans index/backlog if the project keeps one.
 
-If the work is clearly bigger than one PR / one session, it's a **phase** — use
-`plan-phase` to decompose it instead.
+If the work is clearly bigger than one PR / one session, it's a **phase**: stop,
+say why, and tell the user to invoke `plan-phase` (`../_method/vocabulary.md` →
+Redirects). Don't decompose it here.
 
 ## Boundaries
 
 - No feature code. Writing the stage doc and linking it from the phase doc /
   plans index is fine; touching source is not.
+- **Small work still gets the full shape and a PR.** The doc gets shorter on its
+  own; the shape and the pipeline don't change.
 - **Many requests per stage is fine; many PRs' worth of work is not.** The test
   is PR size, not thematic purity. Don't split a coherent PR into five stages
   because the asks are unrelated to each other.

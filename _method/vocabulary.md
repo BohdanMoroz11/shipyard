@@ -107,20 +107,54 @@ stops a plans dir from silently becoming the source of truth:
 
 A shipped stage doc is **history**. It is kept, linked, and never deleted — but
 it is not what a reader consults to learn how the system behaves today. `ship`
-distils it into the other two layers before archiving it (see `ship` step 5).
+distils it into the other two layers before archiving it (`ship` step 5).
 
 The constraint layer earns its own files because it must survive its plan doc's
-archival: an ADR is cited by number from anywhere and stays valid. A decision
-that doesn't bind future work isn't an ADR — it stays in the archived stage doc,
-which is a perfectly good home.
+archival: an ADR is cited by number from anywhere and stays valid. What clears
+that bar is defined once, in `adr-gate.md` — the bar is high, and most stages
+produce no ADR at all.
 
 ## Two ways to ship
 
 - **Pipeline** — the normal path: plan the stage, align, branch, one commit per
-  task, PR, agent checks, human smoke. Use for anything non-trivial.
-- **Hotfix** — urgent. Skip the stage doc and the PR, ship straight to `main`,
-  with a shorter definition-of-done (tests still green, docs still updated if
-  behaviour changed). Only when speed genuinely matters.
+  task, PR, agent checks, human smoke. Use for **everything** that isn't urgent,
+  down to a one-line change; a small stage's doc is simply a short one.
+- **Hotfix** — urgent. Skip the stage doc, take the fastest integration route
+  the repo allows, with a shorter definition-of-done (tests still green, docs
+  still updated if behaviour changed). Only when speed genuinely matters.
+
+What a hotfix skips is the **planning**, not the review. If the repo requires a
+PR, a hotfix is still a PR — just a fast-tracked one.
+
+## Redirects — no skill invokes another
+
+Every skill here is invoked **by the user, by name**. None of them can hand off
+to another, and none should pretend to.
+
+So when a skill finds it's the wrong one for this change — a "stage" that's
+really a phase, a "hotfix" that needs design decisions, a `plan-stage` in a repo
+that was never prepped — the move is always the same three steps:
+
+> **Stop. Say what you found. Name the skill for the user to invoke.**
+
+Never switch, never carry on in the wrong shape, and never assume permission
+from the fact that the right skill exists. The user chose this path; finding out
+it was the wrong one is information they need, not a decision you get to make
+for them.
+
+## Integration route
+
+Whether `main` accepts direct commits is a **repo fact, not a method choice**.
+Read it from the repo's docs (`AGENTS.md`, a contributing guide) or infer it
+from branch protection. Two routes exist:
+
+- **Direct** — commit to `main`. Only where the repo permits it.
+- **Fast-tracked PR** — branch, commit, open the PR, wait for CI, merge
+  immediately.
+
+These are the same urgency at two levels of ceremony. A skill picks the fastest
+route **the repo allows**; it never assumes one. Assuming direct-to-`main` is
+how a portable skillset stops being portable.
 
 ## Who verifies what
 

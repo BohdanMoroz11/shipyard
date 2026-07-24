@@ -19,6 +19,13 @@ enjoys writing (Prod risk, Non-goals) don't quietly disappear.
 
 If a section is genuinely empty, say so in it. Don't delete the heading.
 
+**There is no short version of this shape**, and a small change doesn't need one
+— on a one-commit stage half the sections are honestly one line each, and the
+doc lands at thirty lines without dropping anything (see "A small stage, in
+full" below). A change too small to be worth those thirty lines is not a
+different tier of stage; it's either still a stage, or it's urgent and it's a
+`hotfix`. Nothing else exists.
+
 Match the project's file naming and link conventions if it has them (read a
 recent stage doc first). The section list is not negotiable per-project; the
 naming and location of the file is.
@@ -143,6 +150,78 @@ cutovers answer *no* — those need a runbook. Additive features answer *yes* an
 this section is one line.
 ```
 
+## A small stage, in full
+
+The smallest realistic stage — a dependency bump — with **all ten sections**.
+This is what "one line beats a missing heading" looks like in practice, and it's
+why there's no short version of the shape: six of these sections are a single
+line, and the whole doc is thirty lines.
+
+```markdown
+# Bump `csv-stringify` to 6.5.2
+
+> **Status: shipped (2026-07-19).** Patch bump clearing the CVE on the export
+> path.
+
+Part of: standalone — no phase.
+Canonical behaviour: [netsuite-csv.md](../integrations/netsuite-csv.md).
+
+## Goal
+
+`csv-stringify` is on 6.5.2, the advisory is off the dependency audit, and
+exports behave exactly as before.
+
+## Why now
+
+The advisory fails the weekly audit job, so every unrelated PR now opens with a
+red check. Cheap to clear.
+
+## Context (as of 2026-07-19)
+
+Pinned at 6.4.0 in `package.json`; the only consumer is the streaming export in
+`src/routes/export.ts:41`. 6.5.x changes no API we touch — the release notes
+list a quoting fix for embedded CRLF, which `test/export.spec.ts:88` already
+covers.
+
+## R1 — clear the advisory
+
+Bump to the patched line. No behaviour change intended; the existing export
+fixtures are the contract.
+
+## Tasks
+
+1. **bump** — `csv-stringify` to `6.5.2` in `package.json` + lockfile.
+   `test/export.spec.ts` stays green **unchanged** — that it needed no edits is
+   the evidence the bump is behaviour-neutral. End state: audit clean.
+
+## Milestone
+
+The dependency audit passes on `main` and a seed-tenant export byte-matches the
+pre-bump fixture.
+
+## Resolved decisions (2026-07-19)
+
+None — nothing here was the user's to decide.
+
+## Residual questions
+
+None.
+
+## Non-goals
+
+The other four advisories in the audit. They're on transitive dev-only deps and
+go in the backlog, not here.
+
+## Prod risk
+
+None. Patch bump on one code path, covered by existing fixtures. `git revert` +
+redeploy fully undoes it — no runbook.
+```
+
+Nothing was dropped, and nothing was padded. **Non-goals** did real work — it's
+the section that stops this stage quietly becoming "fix all the advisories" —
+and it's exactly the section a short version would have cut first.
+
 ## A task description, sized right
 
 Too thin — the next session has to re-derive everything:
@@ -174,11 +253,11 @@ rewriting:
 
 ## Rules
 
-- **Every section, every time.** One line beats a missing heading.
+- **Every section, every time.** One line beats a missing heading, and on a
+  small stage most sections *are* one line.
 - **Decisions come before code.** Ask the few that are the user's, assume the
   rest into Residual questions, and don't guess a choice that isn't yours.
-- **Tasks are numbered, not checked.** Progress within a stage lives in `git log`
-  and the PR, not in doc markers.
+- **Tasks are numbered, not checked** — `vocabulary.md` → Status markers.
 - **Descriptions are long on purpose.** They're the context store, not a
   checklist label.
 - **Keep the status line current.** It is the one piece of live state in the doc.

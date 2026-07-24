@@ -45,6 +45,11 @@ Inspect the repo and grade each item **present / partial / missing**:
   installed and authed).
 - **Git / PR hygiene** — can branch and open PRs; a commit-message convention;
   optional PR template.
+- **Integration route** — does `main` accept direct commits, or is it protected
+  / does the repo require PRs? `hotfix` needs this answer to pick its route
+  (`../_method/vocabulary.md` → Integration route). Check branch protection, not
+  just habit — record the answer even when it's "direct is fine", because the
+  point is that no skill has to guess.
 - **Generated-artifact sync** — if codegen exists, a documented "regenerate +
   commit together" gate.
 - **Local run instructions** — a README section on running locally (needed for
@@ -68,7 +73,8 @@ Inventory every planning-ish doc in the repo and classify each:
   plan/spec pairs, a generated task list). Note the count and where it came from.
 - **Decisions with no home** — reasoning trapped inside a plan doc that will
   become invisible the moment that doc is archived. List the ones that would pass
-  the ADR gate (`ship` step 5); these are the highest-value extraction.
+  the ADR gate (`../_method/adr-gate.md`); these are the highest-value
+  extraction.
 - **Canonical-layer gaps** — no domain docs, no decisions dir, no docs index.
 
 Report the mapping, not a verdict on quality. Legacy docs are provenance and stay
