@@ -1,9 +1,10 @@
 # shipyard
 
-A portable, doc-driven set of [Cursor Agent Skills](https://docs.cursor.com)
-that encode one opinionated development flow: **plan a change, align on it, ship
-it as a reviewable PR, distil what it changed into the canonical docs, run agent
-checks, then human smoke** — with an escape hatch for urgent fixes.
+A portable, doc-driven set of agent skills — plain markdown, no tool-specific
+instructions — that encode one opinionated development flow: **plan a change,
+align on it, ship it as a reviewable PR, distil what it changed into the
+canonical docs, run agent checks, then human smoke** — with an escape hatch for
+urgent fixes.
 
 The skills carry the *method*. Each project carries its own *specifics* (money
 model, timezone, naming, commands) in its own docs. The skills read those docs
@@ -48,25 +49,47 @@ the skills link to (not skills themselves):
 
 ## Install
 
-Cursor loads personal skills from `~/.cursor/skills/`. Symlink this repo so the
-relative links between skills and `_method/` keep resolving.
+This repo is a plugin, and it hosts its own marketplace. No symlinks — install
+and update are git operations, so a remote or SSH machine runs the same two
+commands as your laptop.
 
-If `~/.cursor/skills` doesn't exist yet, point it at this repo:
+### Claude Code
 
-```bash
-ln -s /absolute/path/to/shipyard ~/.cursor/skills
+```
+/plugin marketplace add BohdanMoroz11/shipyard
+/plugin install shipyard
 ```
 
-If you already have skills there, symlink each skill dir and `_method`:
+Update later with `/plugin update shipyard`. The CLI equivalents are
+`claude plugin marketplace add …` and `claude plugin install shipyard@shipyard`.
+
+### Cursor
+
+[`.cursor-plugin/plugin.json`](.cursor-plugin/plugin.json) declares the same
+skills for Cursor's plugin loader. If your Cursor build doesn't offer plugin
+install yet, fall back to a clone symlinked at `~/.cursor/skills` (see below) —
+the manifest is inert when unused, so both routes can coexist.
+
+### Any tool that loads a skills directory
+
+Point it at a clone. The skill dirs sit at the repo root next to `_method/`, so
+the relative links between them resolve wherever the tree lands:
 
 ```bash
-mkdir -p ~/.cursor/skills
-for d in audit-repo prep-repo plan-stage plan-phase ship hotfix _method; do
-  ln -s /absolute/path/to/shipyard/$d ~/.cursor/skills/$d
-done
+git clone https://github.com/BohdanMoroz11/shipyard.git ~/src/shipyard
+ln -s ~/src/shipyard ~/.config/<tool>/skills   # or copy it
 ```
 
-Then restart Cursor (or reload skills) and invoke by name, e.g. `plan-stage`.
+### Working on the skills themselves
+
+`claude --plugin-dir /path/to/shipyard` loads the checkout directly, with no
+install step and nothing registered — edits take effect on the next session.
+`claude --plugin-dir . plugin details shipyard` prints what actually loaded
+(note that `--plugin-dir` goes before the subcommand).
+
+Then invoke by name — `/plan-stage` in Claude Code. Every skill sets
+`disable-model-invocation: true`, so none of them fire on their own and their
+descriptions cost nothing per session; you always pick the skill.
 
 ## Usage
 

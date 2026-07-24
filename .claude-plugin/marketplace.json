@@ -1,0 +1,20 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "shipyard",
+  "description": "Shipyard — a doc-driven plan/ship development flow, as agent skills",
+  "owner": {
+    "name": "Bohdan Moroz"
+  },
+  "plugins": [
+    {
+      "name": "shipyard",
+      "description": "One opinionated development flow as explicitly-invoked skills: plan a change, ship it as a reviewable PR, distil what it changed into the canonical docs, verify — with an escape hatch for urgent fixes.",
+      "author": {
+        "name": "Bohdan Moroz"
+      },
+      "category": "workflow",
+      "source": "./",
+      "homepage": "https://github.com/BohdanMoroz11/shipyard"
+    }
+  ]
+}

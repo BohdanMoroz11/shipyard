@@ -1,0 +1,19 @@
+{
+  "name": "shipyard",
+  "displayName": "Shipyard",
+  "description": "One opinionated development flow as explicitly-invoked skills: plan a change, ship it as a reviewable PR, distil what it changed into the canonical docs, verify — with an escape hatch for urgent fixes.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Bohdan Moroz"
+  },
+  "homepage": "https://github.com/BohdanMoroz11/shipyard",
+  "repository": "https://github.com/BohdanMoroz11/shipyard",
+  "keywords": [
+    "workflow",
+    "planning",
+    "docs",
+    "pull-request",
+    "method"
+  ],
+  "skills": "./"
+}
